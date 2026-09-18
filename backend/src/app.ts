@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import swaggerUi from "swagger-ui-express";
 
 import analyticsRoutes from "./routes/analytics.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
@@ -7,6 +8,8 @@ import customerRoutes from "./routes/customer.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import mechanicRoutes from "./routes/mechanic.routes.js";
 import serviceRoutes from "./routes/service.routes.js";
+
+import swaggerDocument from "./docs/swagger.js";
 
 const app = express();
 
@@ -20,6 +23,7 @@ app.use(
 );
 
 app.use(express.json());
+
 app.use(
   express.urlencoded({
     extended: true,
@@ -54,6 +58,28 @@ app.get(
         new Date().toISOString(),
     });
   }
+);
+
+/* -------------------------------------------------------------------------- */
+/* Swagger / OpenAPI                                                          */
+/* -------------------------------------------------------------------------- */
+
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, {
+    customSiteTitle:
+      "Instant Mechanic API Docs",
+    customCss: `
+      .swagger-ui .topbar {
+        display: none;
+      }
+
+      .swagger-ui .info .title {
+        font-size: 32px;
+      }
+    `,
+  })
 );
 
 /* -------------------------------------------------------------------------- */
